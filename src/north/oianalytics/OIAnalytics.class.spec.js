@@ -20,7 +20,7 @@ describe('oi-analytics', () => {
     expect(oiAnalytics.canHandleFiles).toBeTruthy()
   })
 
-  it('should properly handle values', async () => {
+  it('should properly handle values without compression', async () => {
     const values = [
       {
         pointId: 'pointId',
@@ -29,6 +29,7 @@ describe('oi-analytics', () => {
         dataSourceId: 'South',
       },
     ]
+    oiAnalytics.compressed = false
     await oiAnalytics.handleValues(values)
 
     const expectedUrl = `${oiAnalyticsConfig.OIAnalytics.host}/api/optimistik/oibus/data/time_values?dataSourceId=${oiAnalyticsConfig.applicationId}`
@@ -39,6 +40,32 @@ describe('oi-analytics', () => {
       pointId: value.pointId,
     })))
     const expectedHeaders = { 'Content-Type': 'application/json' }
+    expect(engine.sendRequest).toHaveBeenCalledWith(expectedUrl, 'POST', expectedAuthentication, null, expectedBody, expectedHeaders)
+  })
+
+  it('should properly handle values with compression', async () => {
+    const values = [
+      {
+        pointId: 'pointId',
+        timestamp,
+        data: { value: 666, quality: 'good' },
+        dataSourceId: 'South',
+      },
+    ]
+    oiAnalytics.compressed = true
+    await oiAnalytics.handleValues(values)
+
+    const expectedUrl = `${oiAnalyticsConfig.OIAnalytics.host}/api/optimistik/oibus/data/time_values?dataSourceId=${oiAnalyticsConfig.applicationId}`
+    const expectedAuthentication = oiAnalyticsConfig.OIAnalytics.authentication
+    const expectedBody = JSON.stringify(values.map((value) => ({
+      timestamp: value.timestamp,
+      data: value.data,
+      pointId: value.pointId,
+    })))
+    const expectedHeaders = {
+      'Content-Type': 'application/json',
+      'Content-Encoding': 'gzip',
+    }
     expect(engine.sendRequest).toHaveBeenCalledWith(expectedUrl, 'POST', expectedAuthentication, null, expectedBody, expectedHeaders)
   })
 

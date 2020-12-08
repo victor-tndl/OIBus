@@ -20,9 +20,10 @@ class OIAnalytics extends ApiHandler {
     const fileEndpoint = '/api/optimistik/data/values/upload'
     const queryParam = `?dataSourceId=${this.application.applicationId}`
 
-    const { host, authentication, proxy = null } = applicationParameters.OIAnalytics
+    const { host, compressed, authentication, proxy = null } = applicationParameters.OIAnalytics
 
-    this.valuesUrl = `${host}${valuesEndpoint}${queryParam}`
+    const valuesQueryParam = compressed ? `${queryParam}&compressed=true` : queryParam
+    this.valuesUrl = `${host}${valuesEndpoint}${valuesQueryParam}`
     this.fileUrl = `${host}${fileEndpoint}${queryParam}`
     this.authentication = authentication
     this.proxy = this.getProxy(proxy)
@@ -46,6 +47,9 @@ class OIAnalytics extends ApiHandler {
     }))
     const data = JSON.stringify(cleanedValues)
     const headers = { 'Content-Type': 'application/json' }
+    if (this.compressed) {
+      headers['Content-Encoding'] = 'gzip'
+    }
     await this.engine.sendRequest(this.valuesUrl, 'POST', this.authentication, this.proxy, data, headers)
 
     return values.length

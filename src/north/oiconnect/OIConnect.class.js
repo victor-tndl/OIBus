@@ -13,11 +13,14 @@ class OIConnect extends ApiHandler {
   constructor(applicationParameters, engine) {
     super(applicationParameters, engine)
 
-    const { host, valuesEndpoint, fileEndpoint, authentication, proxy = null } = applicationParameters.OIConnect
+    const { host, valuesEndpoint, fileEndpoint, compressed, authentication, proxy = null } = applicationParameters.OIConnect
 
     const dataSourceId = `${this.engineConfig.engineName}:${this.application.applicationId}`
-    this.valuesUrl = `${host}${valuesEndpoint}?dataSourceId=${dataSourceId}`
-    this.fileUrl = `${host}${fileEndpoint}?dataSourceId=${dataSourceId}`
+    const queryParam = `?dataSourceId=${dataSourceId}`
+    const valuesQueryParam = compressed ? `${queryParam}&compressed=true` : queryParam
+    this.valuesUrl = `${host}${valuesEndpoint}${valuesQueryParam}`
+    this.fileUrl = `${host}${fileEndpoint}${queryParam}`
+    this.compressed = compressed
     this.authentication = authentication
     this.proxy = this.getProxy(proxy)
 
@@ -35,6 +38,9 @@ class OIConnect extends ApiHandler {
 
     const data = JSON.stringify(values)
     const headers = { 'Content-Type': 'application/json' }
+    if (this.compressed) {
+      headers['Content-Encoding'] = 'gzip'
+    }
     await this.engine.sendRequest(this.valuesUrl, 'POST', this.authentication, this.proxy, data, headers)
     return values.length
   }

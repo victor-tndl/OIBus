@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const url = require('url')
+const zlib = require('zlib')
 
 const fetch = require('node-fetch')
 const axios = require('axios').default
@@ -92,7 +93,11 @@ const sendWithAxios = async (engine, requestUrl, method, headers, proxy, data, t
 
   let body
   if (Object.prototype.hasOwnProperty.call(headers, 'Content-Type')) {
-    body = data
+    if (Object.prototype.hasOwnProperty.call(headers, 'Content-Encoding')) {
+      body = zlib.gzipSync(data)
+    } else {
+      body = data
+    }
   } else {
     body = generateFormDataBody(data)
 
@@ -155,7 +160,11 @@ const sendWithFetch = async (engine, requestUrl, method, headers, proxy, data, t
 
   let body
   if (Object.prototype.hasOwnProperty.call(headers, 'Content-Type')) {
-    body = data
+    if (Object.prototype.hasOwnProperty.call(headers, 'Content-Encoding')) {
+      body = zlib.gzipSync(data)
+    } else {
+      body = data
+    }
   } else {
     body = generateFormDataBody(data)
 
