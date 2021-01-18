@@ -1,4 +1,6 @@
 const url = require('url')
+
+const fetch = require('node-fetch')
 const ProxyAgent = require('proxy-agent')
 
 const BaseRequest = require('./BaseRequest.class')

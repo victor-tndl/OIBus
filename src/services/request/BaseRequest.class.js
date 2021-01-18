@@ -72,7 +72,7 @@ class BaseRequest {
   async send(requestUrl, method, authentication, proxy, data, baseHeaders = {}, retryCount = 0) {
     const { engineConfig: { httpRequest } } = this.engine.configService.getConfig()
 
-    logger.silly(`sendRequest() to ${method} ${requestUrl} using ${httpRequest.stack} stack`)
+    this.logger.silly(`sendRequest() to ${method} ${requestUrl} using ${httpRequest.stack} stack`)
 
     // Generate authentication header
     const headers = baseHeaders
