@@ -159,7 +159,14 @@ describe('CsvToHttp', () => {
     const expectedbody = JSON.stringify(httpBody)
     const expectedAuthentication = CsvToHttpConfig.CsvToHttp.authentication
     const expectedHeaders = { 'Content-Type': 'application/json' }
-    expect(engine.requestService.send).toHaveBeenCalledWith(expectedUrl, expectedRequestMethod, expectedAuthentication, null, expectedbody, expectedHeaders)
+    expect(engine.requestService.send).toHaveBeenCalledWith(
+      expectedUrl,
+      expectedRequestMethod,
+      expectedAuthentication,
+      null,
+      expectedbody,
+      expectedHeaders,
+    )
     expect(engine.requestService.send).toHaveBeenCalledTimes(1)
   })
 })
