@@ -137,7 +137,14 @@ describe('AliveSignal', () => {
     expect(aliveSignal.prepareStatus).toBeCalled()
     const calledStatus = JSON.stringify({ ...status })
     const headers = { 'Content-Type': 'application/json' }
-    expect(engine.requestService.send).toHaveBeenCalledWith(aliveSignal.host, 'POST', aliveSignal.authentication, aliveSignal.proxy, calledStatus, headers)
+    expect(engine.requestService.send).toHaveBeenCalledWith(
+      aliveSignal.host,
+      'POST',
+      aliveSignal.authentication,
+      aliveSignal.proxy,
+      calledStatus,
+      headers
+    )
     expect(aliveSignal.logger.debug).toBeCalledWith('Alive signal successful')
     expect(setTimeout).toHaveBeenCalledTimes(1)
   })
