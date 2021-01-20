@@ -143,7 +143,7 @@ describe('AliveSignal', () => {
       aliveSignal.authentication,
       aliveSignal.proxy,
       calledStatus,
-      headers
+      headers,
     )
     expect(aliveSignal.logger.debug).toBeCalledWith('Alive signal successful')
     expect(setTimeout).toHaveBeenCalledTimes(1)
