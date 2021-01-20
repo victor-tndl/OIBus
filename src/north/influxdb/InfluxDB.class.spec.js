@@ -53,7 +53,7 @@ describe('InfluxDB north', () => {
     expect(influxDbNorth.makeRequest).toHaveBeenNthCalledWith(1, values)
   })
 
-  it('should call Engine\'s sendRequest() with the proper parameters', async () => {
+  it('should call RequestService send() with the proper parameters', async () => {
     const influxDbNorth = new InfluxDB({ InfluxDB: influxDbConfig }, engine)
 
     await influxDbNorth.handleValues(values)

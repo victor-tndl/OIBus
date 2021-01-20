@@ -123,7 +123,7 @@ describe('AliveSignal', () => {
     expect(status).toEqual({ status: 'status', version: 'version', id: 'id' })
   })
 
-  it('should call RequestService postJsonValues()', async () => {
+  it('should call RequestService send()', async () => {
     const status = { status: 'status' }
 
     const aliveSignal = new AliveSignal(engine)
