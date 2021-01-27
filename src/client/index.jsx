@@ -21,6 +21,13 @@ import AlertContainer from './components/AlertContainer.jsx'
 import { AlertProvider } from './context/AlertContext.jsx'
 import { ConfigProvider } from './context/configContext.jsx'
 
+const source = new EventSource('http://localhost:2223/sse')
+source.onopen = () => console.log('Connected')
+source.onerror = console.error
+source.onmessage = (event) => {
+  console.log(event.data)
+}
+
 const Main = () => (
   <Router>
     <>
